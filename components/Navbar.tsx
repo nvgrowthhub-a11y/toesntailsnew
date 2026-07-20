@@ -1,0 +1,130 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import LogoName from "../public/images/LogoName.png";
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled ? "bg-white/90 backdrop-blur-md shadow-lg" : "bg-white"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* LOGO SECTION (IMPORTANT FIXED) */}
+          <div className="flex items-center">
+            <Link href="#home" className="flex items-center">
+              <Image
+                src="/images/toes-n-tails-logo.png"
+                alt="TOES N TAILS"
+                width={140}
+                height={140}
+                priority
+                className="h-14 w-auto object-contain drop-shadow-md"
+              />
+            </Link>
+            <br />
+            <Link href="#home" className="flex items-center">
+              <Image
+                src="/images/LogoName.png"
+                alt="TOES N TAILS"
+                width={2240}
+                height={240}
+                priority
+                className="h-20 w-auto object-contain"
+              />
+            </Link>
+          </div>
+
+          {/* DESKTOP MENU */}
+          <div className="hidden md:flex items-center gap-10">
+            {[
+              { name: "Home", href: "#home" },
+              { name: "About", href: "#about" },
+              { name: "Services", href: "#services" },
+              { name: "Contact", href: "#contact" },
+            ].map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="text-gray-700 font-medium relative group transition-all"
+              >
+                <span className="group-hover:text-pink-600 transition-colors duration-300">
+                  {item.name}
+                </span>
+
+                <span className="absolute left-0 -bottom-1 h-0.5 w-0 bg-pink-600 transition-all duration-300 group-hover:w-full"></span>
+              </Link>
+            ))}
+
+            {/* Book Now Button */}
+            <Link
+              href="#contact"
+              className="bg-pink-600 text-white px-7 py-3 rounded-full font-semibold shadow-lg hover:bg-pink-700 hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              Book Now
+            </Link>
+          </div>
+
+          {/* MOBILE BUTTON */}
+          <button
+            onClick={() => setOpen(!open)}
+            className="md:hidden flex flex-col gap-1"
+          >
+            <span className="w-6 h-0.5 bg-black"></span>
+            <span className="w-6 h-0.5 bg-black"></span>
+            <span className="w-6 h-0.5 bg-black"></span>
+          </button>
+        </div>
+
+        {/* MOBILE MENU */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ${
+            open ? "max-h-96 opacity-100 pb-5" : "max-h-0 opacity-0"
+          }`}
+        >
+          <div className="flex flex-col gap-4 pt-4">
+            <Link onClick={() => setOpen(false)} href="#home">
+              Home
+            </Link>
+
+            <Link onClick={() => setOpen(false)} href="#about">
+              About
+            </Link>
+
+            <Link onClick={() => setOpen(false)} href="#services">
+              Services
+            </Link>
+
+            <Link onClick={() => setOpen(false)} href="#contact">
+              Contact
+            </Link>
+
+            <Link
+              href="#contact"
+              onClick={() => setOpen(false)}
+              className="bg-pink-600 text-white px-6 py-3 rounded-full w-fit font-semibold shadow-md hover:bg-pink-700 transition-all"
+            >
+              Book Now
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+}
